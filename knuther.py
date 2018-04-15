@@ -2,7 +2,9 @@ from scipy.stats import chisquare
 import itertools
 import math
 
-class DataSet:
+## -- HELPERS (MAIN IS BELOW) -- ##
+
+class Dataset:
 
 	@staticmethod
 	def fileIterator(filename):
@@ -20,7 +22,7 @@ class DataSet:
 
 
 	def __str__(self):
-		return("statTest.DataSet object\nRange:\t{0} - {1}\nSize:\t{2}".format(self.info['min'],self.info['max'],self.info['size']))
+		return("statTest.Dataset object\nRange:\t{0} - {1}\nSize:\t{2}".format(self.info['min'],self.info['max'],self.info['size']))
 
 	def getData(self):
 		return self.data
@@ -53,20 +55,27 @@ def getGroupsOfSize(n,dataset,shift=0):
 
 class StatTest:
 
-	def __init__(self, data=None):
+	def __init__(self, data):
 		self.DataSet = data
 		self.setValues()
 		self.setCounts()
 		self.setExpected()
-		self.computeP() 
+		self.computeP()
+		self.testName = "Test name not specified."
 
 	def computeP(self):
 		self.testStatistic, self.pvalue = chisquare(self.counts,self.expected)
+
+	def __str__(self):
+		template = "{0}\tp-value: {1:.6f}"
+		return(template.format(self.testName,self.pvalue))
+
 
 class FrequencyTest(StatTest):
 
 	def __init__(self,data):
 		StatTest.__init__(self,data)
+		self.testName = "Frequency Test"
 
 	def setValues(self):
 		self.values = list(range(self.DataSet.getRange()[1]+1))
@@ -89,6 +98,7 @@ class SerialTest(FrequencyTest):
 	def __init__(self,data,offset):
 		self.offset = offset
 		FrequencyTest.__init__(self,data)
+		self.testName = "Serial Test Offset" if offset else "Serial Test"
 
 	def setValues(self):
 		v = list(range(self.DataSet.getRange()[1]+1))
@@ -124,6 +134,7 @@ class PermutationTest(StatTest):
 	def __init__(self,data,permSize=3):
 		self.permutationSize = permSize
 		StatTest.__init__(self,data)
+		self.testName = "Permutation Test"
 
 	def setValues(self):
 		self.values = list(["Order " + str(k) for k in range(1,math.factorial(self.permutationSize)+1)] + ["None"])
@@ -165,11 +176,57 @@ class PermutationTest(StatTest):
 		total = sum(self.counts)
 		self.expected = [total*e for e in expected]
 
-# Add Poker Test
+class PokerTest(StatTest):
+
+	def __init__(self,data,handSize=5):
+		self.handSize = handSize
+		StatTest.__init__(self,data)
+		self.testName = "Poker Test"
+
+	def setValues(self):
+		self.values = list([str(k) + " unique numbers" for k in range(1,self.handSize+1)])
+
+	def setCounts(self):
+		self.counts = [0]*len(self.values)
+
+		# While not at the end of the sequence, create the pairs and classify them
+		notAtEnd = True
+		while(notAtEnd):
+			try:
+				hand = [next(self.DataSet.data) for i in range(0,self.handSize)]
+				self.counts[len(set(hand))] += 1
+			except StopIteration:
+				notAtEnd = False
+		self.DataSet.resetIterator()
+
+	def setExpected(self):
+		d = self.DataSet.getRange()
+		d = d[1] - d[0] + 1
+		r = self.handSize
+		
+		p[k] = [math.factorial(d)/((d**k)*math.factorial(d - r))*sterling2(k,r) for k in range(1,self.handSize+1)]
+
+
 # Add Runs Test
+# Add Gaps Test
 
+## -- MAIN -- ##
 
+import sys
+def main(argv):
+	# Load the data
+	filename = argv[1]
+	data = Dataset(filename)
 
+	# Create and perform all the stat tests
+	tests = []
+	tests.append(FrequencyTest(data))
+	tests.append(SerialTest(data,False))
+	tests.append(SerialTest(data,True))
+	tests.append(PermutationTest(data))
 
+	for tst in tests:
+		print(tst)
 
-
+if __name__ == '__main__':
+	main(sys.argv)
