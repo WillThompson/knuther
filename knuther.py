@@ -208,23 +208,20 @@ class PokerTest(StatTest):
 		p[k] = [math.factorial(d)/((d**k)*math.factorial(d - r))*sterling2(k,r) for k in range(1,self.handSize+1)]
 
 
+def checkup(x,y):
+	return x > y
+
+def checkdown(x,y):
+	return x < y
+
 
 class RunsTest(StatTest):
 
-
-	def runUpCheck(n0,n1):
-		return(n1 > n0)
-
-	def runDownCheck(n0,n1):
-		return(n1 < n0)
-
 	def __init__(self,data,runsUp):
-		StatTest.__init__(self,data)
 		self.runsUp = runsUp
-		if self.runsUp:
-			self.testName = "Runs Up Test"
-		else:
-			self.testName = "Runs Down Test"
+		self.check = checkup if runsUp else checkdown
+		StatTest.__init__(self,data)
+		self.testName = "Runs Up Test" if runsUp else "Runs Down Test"
 
 	def setValues(self):
 		self.values = [ "Runs of length " + str(k) for k in range(self.DataSet.getRange()[1]+1)]
@@ -241,7 +238,7 @@ class RunsTest(StatTest):
 		while(notAtEnd):
 			try:
 				num = next(self.DataSet.data)
-				if (num > prev):
+				if (self.check(num,prev)):
 					prev = num
 					counter += 1
 				else:
@@ -283,6 +280,7 @@ def main(argv):
 	tests.append(SerialTest(data,True))
 	tests.append(PermutationTest(data))
 	tests.append(RunsTest(data,True))
+	tests.append(RunsTest(data,False))
 
 	for tst in tests:
 		print(tst)
