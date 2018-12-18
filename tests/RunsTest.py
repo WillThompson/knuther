@@ -1,4 +1,4 @@
-from StatTest import *
+from tests.StatTest import *
 from scipy.special import comb
 
 def checkup(x, y):

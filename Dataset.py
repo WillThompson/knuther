@@ -34,10 +34,15 @@ class Dataset:
 		self.data = self.fileIterator(self.filename)
 
 	def computeGlobals(self):
-		vector = [x for x in self.data]
-		self.info['max'] = max(vector)
-		self.info['min'] = min(vector)
-		self.info['size'] = len(vector)
+
+		self.info['max'] = float("-inf")
+		self.info['min'] = float("inf")
+		self.info['size'] = 0
+		
+		for x in self.data:
+			self.info['max'] = max(self.info['max'],x)
+			self.info['min'] = min(self.info['min'],x)
+			self.info['size'] += 1
 
 
 def getGroupsOfSize(n,dataset,shift=0):

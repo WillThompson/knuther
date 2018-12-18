@@ -1,4 +1,4 @@
-from FrequencyTest import *
+from tests.FrequencyTest import *
 import itertools
 
 class SerialTest(FrequencyTest):

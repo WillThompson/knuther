@@ -1,4 +1,4 @@
-from StatTest import *
+from tests.StatTest import *
 
 class FrequencyTest(StatTest):
 

@@ -1,4 +1,4 @@
-from StatTest import *
+from tests.StatTest import *
 import math
 
 def sterling2(n,k):
