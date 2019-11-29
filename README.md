@@ -16,4 +16,8 @@
 4. Install the required packages:
 `pip install -r requirements.txt`
 
-5. To be continued...
+5. Run the tests on a sample set of data:
+
+```
+python main.py
+```
