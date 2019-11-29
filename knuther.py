@@ -32,6 +32,7 @@ def main(argv):
 	for k in range(data.getRange()[0],data.getRange()[1]+1):
 		test_list.append(tests.GapsTest.GapsTest(data,k))
 
+	# Print the results
 	for tst in test_list:
 		print(tst)
 
