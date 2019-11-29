@@ -1,14 +1,16 @@
 # knuther
 
-## Set-up
+## Set-up (Linux)
 
-1. Set up the virtual environment
+0. Clone project and open a terminal in the parent directory
+
+1. Set up the virtual environment:
 `virtualenv .venv -p python3`
 
-2. Create symbolic link to activate file in the parent directory
+2. Create symbolic link to activate file in the parent directory:
 `ln -s .venv/bin/activate`
 
-3. Activate the virtual environment
+3. Activate the virtual environment:
 `source activate`
 
 4. Install the required packages:
