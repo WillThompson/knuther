@@ -5,16 +5,24 @@
 0. Clone project and open a terminal in the parent directory
 
 1. Set up the virtual environment:
-`virtualenv .venv -p python3`
+```
+virtualenv .venv -p python3
+```
 
 2. Create symbolic link to activate file in the parent directory:
-`ln -s .venv/bin/activate`
+```
+ln -s .venv/bin/activate
+```
 
 3. Activate the virtual environment:
-`source activate`
+```
+source activate
+```
 
 4. Install the required packages:
-`pip install -r requirements.txt`
+```
+pip install -r requirements.txt
+```
 
 5. Run the tests on a sample set of data:
 
